@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -45,6 +46,26 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        $arrayException = [
+            HttpException::class,
+            ModelNotFoundException::class,
+            ValidationException::class
+        ];
+
+        if(in_array(get_class($exception),$arrayException)){
+
+            $response = parent::render($request, $exception);
+            $arrayError = [
+                'status_code' => $response->getStatusCode(),
+                'erro_code' => 5557,
+                'message' => $exception->getMessage(),
+                'about_error' => 'algum link'
+            ];
+            if($exception instanceof ValidationException){
+                $arrayError['fields'] = $exception->validator->getMessageBag()->toArray();
+            }
+            return son_response()->make($arrayError, $response->getStatusCode());
+        }
         return parent::render($request, $exception);
     }
 }

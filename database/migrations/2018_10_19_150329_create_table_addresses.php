@@ -21,7 +21,7 @@ class CreateTableAddresses extends Migration
             $table->string('zipcode');
             $table->integer('client_id')->unsigned();
 
-            $table->foreign('client_id')->references('id')->on('clients');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');;
             $table->timestamps();
         });
     }

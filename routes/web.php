@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return $router->version();
 });
 
 
@@ -75,7 +75,8 @@ $router->post('server', function () use ($uri){
       'cache_wsdl' => WSDL_CACHE_NONE
   ]);
   $server->setUri("$uri/server");
-  return $server->setReturnResponse(true)
+  return $server
+      ->setReturnResponse(true)
       ->addFunction('soma')
       ->handle();
 });
@@ -85,7 +86,6 @@ $router->get('soap-test', function () use ($uri){
         'cache_wsdl' => WSDL_CACHE_NONE
     ]);
     print_r($client->soma(2,5));
-
 });
 
 /**
